@@ -1,0 +1,128 @@
+编写一个简单的chrome插件
+2018年01月26日 13:02:28 axaaxaa 阅读数：8948
+版权声明：本文为博主原创文章，未经博主允许不得转载。	https://blog.csdn.net/lilian1131/article/details/79171125
+经过本博主的实践证实，发布一个chrome插件并不困难，你只需要跟着我的步伐，一步，两步…一个插件就完成了。 但是插件里面具体的功能设计就要看各位的编程能力了。
+
+编写一个chrome插件，你需要准备好一个好看的图片作为扩展程序的图标。准备好图标后，我们就要开始设计插件了。
+
+1、chrome扩展需要的文件
+可以这么理解，chrome扩展程序就是一个web应用，所以我们实际是要写html代码。而chrome插件需要的文件就包括配置文件(manifest.json)、扩展图标(icon.png 可以是任意的名字，在配置文件中会使用到)、popup弹出窗口html文件(popup.html)以及其他静态资源文件(如images、css、js等)。如下图，我建立了一个jubar的文件用作chrome扩展文件夹。里面的文件夹内容如下图： 
+chrome扩展文件
+
+2、Browser Actions（扩展图标）
+只要chrome启用了某个chrome扩展程序，对应地将该程序的扩展图片显示在地址栏的右侧。如下图： 
+chrome扩展文件 
+如图，红色箭头指引后面的各个小图标对应着不同的扩展程序。
+
+3、popup弹出窗口
+接下来，就是编写popup弹出窗口了。当我们点击扩展程序的图标时，就会弹出对应扩展程序的popup弹出窗口。 
+popup窗口
+
+4、编写配置文件manifest.json
+{  
+  "name": "Jubar",  
+  "manifest_version":2,
+  "version": "4.0.1",  
+  "description": "Gather your friends and family",
+  "browser_action": {  
+    "default_icon": "icon.png" ,
+    "default_title": "Jubar",
+    "default_popup": "popup.html"
+  }  
+} 
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+必须属性：
+name、version、manifest_version 
+1、name 插件名称； 
+2、version 插件的版本号； 
+3、manifest_version 指定清单文件格式的版本，在Chrome18之后，应该都是2，所以这个值直接设定为2就OK了；
+
+推荐属性：
+description、icons、default_locale 
+1、description 插件描述，简单介绍插件用途； 
+2、icons 插件图标，需准备16*16（扩展信息栏）、48*48（扩展管理页面）、128*128（用在安装过程中）的三个图标文件，建议为PNG格式，因为PNG对透明的支持最好； 
+3、default_locale 国际化支持，支持何种语言的浏览器，虽然官方推荐，不过我没用；
+
+其他属性
+browser_action代表扩展图标段显示，它会定义图标地址、标题（也就是鼠标悬停提示）和默认的popup页面。我们这里定义的popup页面为popup.html。
+
+5、编写popup页面
+<style type="text/css">
+*{margin:0;padding:0;}
+body{color:#333;overflow: hidden;margin: 0px;padding:5px;background: white;font-size:12px;}
+#box{
+    width:170px;
+    height:100px;
+    border:1px solid red;
+}
+img{margin:0 4px;}
+#addItemDiv{color:#ccc;}
+.hide{display:none;}
+.show{display:block;}
+.taskItem{cursor:pointer;}
+input{width:100%;}
+</style>
+<div id="box">
+<div id="newItem" class="gray">add</div>
+<div id="addDiv" class="hide"><input type="text" id="txtTitle" /></div>
+<div id="taskItemList">
+    <div class="taskItem">
+        <span class="taskTitle">new task</span>
+    </div>
+    <div class="taskItem">
+        <span class="taskTitle">completed task</span>
+    </div>
+</div>
+</div>
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+预览该页面，如下图： 
+popup页面
+
+6、打包扩展程序
+1、打开Chrome –> 更多工具 –> 扩展程序 
+2、打开“开发者模式” 
+
+3、点击“打包扩展程序…”，出现下列弹框后，选择一开始建立好的扩展程序文件夹 
+打包扩展程序... 
+4、完成前三步后，我们的扩展程序就算发布成功了 
+
+5、在扩展程序处于启用状态时，我们就可以在Chrome浏览器地址栏右侧看到该扩展程序的图标了，点击图标后就会出现我们的popup页面，如下图： 
+
+
+当然，本博文只是对简单扩展程序发布的步骤讲解。若想要编写更加实用的扩展程序，就需要读者根据自己的需要具体设计了。如最开始描述的百度翻译扩展程序一样，发挥它实用的作用
